@@ -5,6 +5,7 @@ var request = require("request");
 var Campground = require("../models/campground");
 var middleware = require("../middleware");
 
+
 //Index - show all campgrounds
 router.get("/",function(req,res){
 	
@@ -28,7 +29,7 @@ router.post("/", middleware.isLoggedIn,function(req,res){
 	var desc = req.body.description;
 	var price = req.body.price;
 	var address = req.body.address;
-	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=";
+	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + res.locals.api_key;
 	request(url,function(error,response,body){
 		var coordinates = {lat:0,lng:0};
 		if(!error && response.statusCode == 200){
@@ -118,7 +119,7 @@ router.put("/:id", middleware.isLoggedIn,function(req,res){
 	var desc = req.body.campground.description;
 	var price = req.body.campground.price;
 	var address = req.body.campground.address;
-	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=";
+	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + res.locals.api_key;
 	request(url,function(error,response,body){
 		var coordinates = {lat:0,lng:0};
 		if(!error && response.statusCode == 200){
@@ -168,20 +169,20 @@ router.delete("/:id",middleware.checkCampgroundOwnership,function(req,res){
 	})
 });
 
-function getCoordinates(address){
-	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=";
-	var res = {lat:0,lng:0};
-	request(url,function(error,response,body){
+// function getCoordinates(address){
+// 	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + res.locals.api_key;
+// 	var res = {lat:0,lng:0};
+// 	request(url,function(error,response,body){
 		
-		if(!error && response.statusCode == 200){
-			var data = JSON.parse(body);
-			// console.log(data.results[0].geometry.location);
-			res = data.results[0].geometry.location;
+// 		if(!error && response.statusCode == 200){
+// 			var data = JSON.parse(body);
+// 			// console.log(data.results[0].geometry.location);
+// 			res = data.results[0].geometry.location;
 			
-		}		
+// 		}		
 		
-	});
-	return res;	
-}
+// 	});
+// 	return res;	
+// }
 
 module.exports = router;

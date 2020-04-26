@@ -1,4 +1,3 @@
-
 var express        = require("express"),
     app            = express(),
     bodyParser     = require("body-parser"),
@@ -33,6 +32,7 @@ app.use(require("express-session")({
 	secret: "Lola is super cute",
 	resave: false,
 	saveUninitialized: false
+	
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -49,6 +49,7 @@ app.use(function(req,res,next){
 	res.locals.currentUser = req.user;
 	res.locals.error = req.flash("error");
 	res.locals.success = req.flash("success");
+	res.locals.api_key = process.argv[2];
 	next();
 });
 
@@ -68,4 +69,5 @@ app.use("/campgrounds",campgroundRoutes);
 
 app.listen(3000,function(){
 	console.log("YelpCamp v13 server running on port 3000.")
+	// console.log(process.argv)
 });
