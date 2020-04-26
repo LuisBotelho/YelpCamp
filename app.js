@@ -1,4 +1,4 @@
-//AIzaSyAlWUQLosToDzm206pBnSorC6wTTD-P8wA
+
 var express        = require("express"),
     app            = express(),
     bodyParser     = require("body-parser"),
