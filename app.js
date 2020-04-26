@@ -23,7 +23,12 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.connect("mongodb://localhost/yelp_camp_v13");
 
+var db_url = process.env.DATABASEURL || "mongodb://localhost/yelp_camp_v13";
+mongoose.connect(db_url);
+
 // seedDB();
+
+
 
 app.use(flash());
 
@@ -49,7 +54,7 @@ app.use(function(req,res,next){
 	res.locals.currentUser = req.user;
 	res.locals.error = req.flash("error");
 	res.locals.success = req.flash("success");
-	res.locals.api_key = process.argv[2];
+	res.locals.gmaps_api_key = process.env.GMAPS_API_KEY || 'noapi';
 	next();
 });
 
@@ -67,7 +72,12 @@ app.use("/",indexRoutes);
 app.use("/campgrounds/:id/comments",commentRoutes);
 app.use("/campgrounds",campgroundRoutes);
 
-app.listen(3000,function(){
-	console.log("YelpCamp v13 server running on port 3000.")
-	// console.log(process.argv)
-});
+var heroku_var = process.env.HEROKU || '0';
+if(heroku_var === '0'){
+	app.listen(3000,function(){
+		console.log("Running on port 3000.")
+	});
+}
+else{
+	app.listen(process.env.PORT,process.env.IP);
+}

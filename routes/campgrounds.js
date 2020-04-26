@@ -29,7 +29,7 @@ router.post("/", middleware.isLoggedIn,function(req,res){
 	var desc = req.body.description;
 	var price = req.body.price;
 	var address = req.body.address;
-	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + res.locals.api_key;
+	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + res.locals.gmaps_api_key;
 	request(url,function(error,response,body){
 		var coordinates = {lat:0,lng:0};
 		if(!error && response.statusCode == 200){
@@ -119,7 +119,7 @@ router.put("/:id", middleware.isLoggedIn,function(req,res){
 	var desc = req.body.campground.description;
 	var price = req.body.campground.price;
 	var address = req.body.campground.address;
-	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + res.locals.api_key;
+	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + res.locals.gmaps_api_key;
 	request(url,function(error,response,body){
 		var coordinates = {lat:0,lng:0};
 		if(!error && response.statusCode == 200){
@@ -170,7 +170,7 @@ router.delete("/:id",middleware.checkCampgroundOwnership,function(req,res){
 });
 
 // function getCoordinates(address){
-// 	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + res.locals.api_key;
+// 	var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&key=" + res.locals.gmaps_api_key;
 // 	var res = {lat:0,lng:0};
 // 	request(url,function(error,response,body){
 		
