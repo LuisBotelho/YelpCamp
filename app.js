@@ -1,3 +1,4 @@
+//AIzaSyAlWUQLosToDzm206pBnSorC6wTTD-P8wA
 var express        = require("express"),
     app            = express(),
     bodyParser     = require("body-parser"),
@@ -9,7 +10,8 @@ var express        = require("express"),
 	passport       = require("passport"),
 	LocalStrategy  = require("passport-local"),
 	User           = require("./models/user"),
-	methodOverride = require("method-override")
+	methodOverride = require("method-override"),
+	request        = require("request");
 
 //Requiring routes
 var commentRoutes     = require("./routes/comments"),

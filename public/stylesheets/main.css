@@ -13,3 +13,30 @@
 .delete-form{
 	display:inline;
 }
+
+ #map{
+  /* position:fixed !important;
+  display:block !important; */
+  width: 100%;
+  height: 100%;
+}
+
+/* iframe{
+	width = 0.2em;
+	border:0;
+} */
+
+#map {
+  height: 300px;
+  margin-bottom: 20px;
+}
+
+/* #map {
+height: 10%;
+}
+ */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
