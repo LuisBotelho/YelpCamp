@@ -5,6 +5,28 @@ var request = require("request");
 var Campground = require("../models/campground");
 var middleware = require("../middleware");
 
+var multer = require('multer');
+var storage = multer.diskStorage({
+  filename: function(req, file, callback) {
+    callback(null, Date.now() + file.originalname);
+  }
+});
+var imageFilter = function (req, file, cb) {
+    // accept image files only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+var upload = multer({ storage: storage, fileFilter: imageFilter})
+
+var cloudinary = require('cloudinary');
+cloudinary.config({ 
+  cloud_name: 'dcfrjhaiq', 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 
 //Index - show all campgrounds
 router.get("/",function(req,res){
@@ -22,10 +44,10 @@ router.get("/",function(req,res){
 });
 
 //CREATE
-router.post("/", middleware.isLoggedIn,function(req,res){
+router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, res) {
 	//get data from form and add to campgrounds array
 	var name = req.body.name;
-	var image = req.body.image;
+	// var image = req.body.image;
 	var desc = req.body.description;
 	var price = req.body.price;
 	var address = req.body.address;
@@ -49,19 +71,23 @@ router.post("/", middleware.isLoggedIn,function(req,res){
 			id: req.user._id,
 			username: req.user.username
 		}
-		var newCampground = {name:name,image:image,description:desc,author:author,price:price,address:address,coordinates:coordinates};
-		// Create a new campground and save to DB
-		Campground.create(newCampground,function(err,newlyCreated){
-			if(err){
-				console.log(err)
-			}
-			else{
-				//redirect to campgrounds page
-				req.flash("success","Campground added successfully!");
-				res.redirect("/campgrounds");
-			}
-		});
 		
+		cloudinary.uploader.upload(req.file.path, function(result) {
+			var image = result.secure_url;
+			var newCampground = {name:name,image:image,description:desc,author:author,price:price,address:address,coordinates:coordinates};
+			// Create a new campground and save to DB
+			Campground.create(newCampground,function(err,newlyCreated){
+				if(err){
+					req.flash('error', err.message);
+      				return res.redirect('back');
+				}
+				else{
+					//redirect to campgrounds page
+					req.flash("success","Campground added successfully!");
+					res.redirect("/campgrounds");
+				}
+			});
+		});
 	});
 	
 });
